@@ -30,9 +30,15 @@ class Scraper
       binding.pry
       social = profile.css(".social-icon-container a").map {|link| link["href"]}
       
+      
+      if social
       twitter_idx =  social.index {|s|s.include?("twitter")}
       linkedin_idx =  social.index {|s|s.include?("linkedin")}
       github_idx = social.index {|s|s.include?("github")}
+      
+      else
+        blog_index = social.index {|s|s}
+      end 
       
       #profile.css(".social-icon-container //a[href*='twitter']"), -finding name of href but returns array
       
@@ -40,7 +46,7 @@ class Scraper
         :twitter => social[twitter_idx],
         :linkedin => social[linkedin_idx],
         :github => social[github_idx],
-        :blog => profile.css(".social-icon-container //a[href*='youtube']"),
+        :blog => social[blog_index],
         :profile_quote => profile.css(".vitals-text-container .profile-quote").text,
         :bio => profile.css(".details-container p").text
       }
