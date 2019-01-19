@@ -10,7 +10,7 @@ class Scraper
     
     students = []
     doc.css("div.student-card").each do |student|
-      #binding.pry
+     
       students += [
         :name => student.css("h4.student-name").text,
         :location => student.css("p.student-location").text, 
@@ -21,28 +21,23 @@ class Scraper
   end
 
   def self.scrape_profile_page(profile_url)
-    url = File.read(profile_url)
-    doc = Nokogiri::HTML(url)
+    doc = Nokogiri::HTML(File.read(profile_url))
     
-    profiles = {}
+    student = {}
     
     doc.css(".main-wrapper").each do |profile|
-      binding.pry
-      social = profile.css(".social-icon-container a").map {|link| link["href"]}
+      #binding.pry
+      social = profile.css(".social-icon-container a").map {|link| link["href"]} # or link("href").value
       
-      
-      if social
-      twitter_idx =  social.index {|s|s.include?("twitter")}
-      linkedin_idx =  social.index {|s|s.include?("linkedin")}
-      github_idx = social.index {|s|s.include?("github")}
-      
+      if twitter_idx = social.index {|s|s.include?("twitter")}
+      elsif linkedin_idx = social.index {|s|s.include?("linkedin")}
+      elsif github_idx = social.index {|s|s.include?("github")}
+      elsif blog_index = social.index {|s|s.include?(".com")}
       else
-        blog_index = social.index {|s|s}
-      end 
-      
-      #profile.css(".social-icon-container //a[href*='twitter']"), -finding name of href but returns array
-      
-      profiles = {
+        nil
+      end
+
+      student = {
         :twitter => social[twitter_idx],
         :linkedin => social[linkedin_idx],
         :github => social[github_idx],
@@ -50,8 +45,9 @@ class Scraper
         :profile_quote => profile.css(".vitals-text-container .profile-quote").text,
         :bio => profile.css(".details-container p").text
       }
+       #profile.css(".social-icon-container //a[href*='twitter']"), -finding name of href but returns array
     end
-    profiles.delete_if {|k,v|v.nil?}
+    student.delete_if {|k,v|v.nil?}
   end
 
 end
