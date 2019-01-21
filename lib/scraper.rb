@@ -19,11 +19,6 @@ class Scraper
     scraped_students
   end
 
-# The return value of this method should be a hash in which the key/value pairs
-# describe an individual student.
-# Some students don't have a twitter or some other social link. Be sure to be able to handle that.
-# The only attributes you need to scrape from a student's profile page are the ones listed above:
-# twitter url, linkedin url, github url, blog url, profile quote, and bio.
   def self.scrape_profile_page(profile_url)
     doc = Nokogiri::HTML(open(profile_url))
 
